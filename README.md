@@ -1,17 +1,17 @@
-# `counts`
+# Overview
 
 `counts` tallies line frequencies within text files, like an improved version
 of the Unix command chain `sort | uniq -c`.
 
 You can use it in combination with logging print statements in a program of
-interest to obtain invaluable, domain-specific profiling data. I call this "ad
-hoc profiling".
+interest to obtain invaluable, domain-specific profiling data. I call this
+technique "ad hoc profiling".
 
 # Building
 
 Within the `counts` repository, run `cargo build --release`. This creates the
-binary `target/release/counts`. You can then put that directory in your `PATH`
-variable, or copy/symlink the binary elsewhere.
+executable `target/release/counts`. You can then put `target/release/` in your
+`PATH` variable, or copy/symlink the executable elsewhere.
 
 # An example
 
@@ -69,7 +69,7 @@ want to know more.
   Many? A mixture? Print the element count.
 - What are the contents of vector V at this code location? Print the contents.
 - How many bytes of memory are used by data structure D at this code location?
-  Print the size.
+  Print the byte size.
 - Which call sites of function F are the hot ones? Print an identifying string
   at the call site.
 
@@ -91,7 +91,7 @@ But that would require:
 - deciding where to initialize the table; and
 - deciding where to print the contents of the table.
 
-In a large program that can be a pain.
+That is a pain, especially in a large program you don't fully understand.
 
 Alternatively, sometimes you want information that a general-purpose profiler
 could give you, but running that profiler on your program is a hassle because
@@ -103,10 +103,10 @@ up in no time at all. (Recompiling is often the slowest part of the process.)
 This encourages experimentation. You can also kill a running program at any
 point with no loss of profiling data.
 
-Don't feel guilty about wasting machine resources; this is temporary code. I
-sometimes end up with output files that are gigabytes in size. But `counts` is
-fast because it's so simple. Let the machine do the work for you. (It does help
-if you have a machine with an SSD.)
+Don't feel guilty about wasting machine resources; this is temporary code. You
+might sometimes end up with output files that are gigabytes in size. But
+`counts` is fast because it's so simple. Let the machine do the work for you.
+(It does help if you have a machine with an SSD.)
 
 # Tips
 
@@ -117,10 +117,9 @@ Pipe the stderr output to file, e.g. `firefox 2> log`.
 
 Sometimes programs print other lines of output to stderr that should be ignored
 by `counts`. (Especially if they include integer IDs that `counts -w` would
-interpret as weights!) So I usually prepend all my logging lines with a short
-identifier, and then use `grep $ID log | counts` to ignore the other lines.
-Sometimes I'll use more than one prefix, and then I can grep for each prefix
-individually or all together.
+interpret as weights!) Prepend all logging lines with a short identifier, and
+then use `grep $ID log | counts` to ignore the other lines. If you use more
+than one prefix, you can grep for each prefix individually or all together.
 
 Occasionally output lines get munged together when multiple print statements
 are present. Because there are typically many lines of output, having a few
