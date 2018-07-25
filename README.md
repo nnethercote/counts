@@ -9,6 +9,8 @@ technique "ad hoc profiling".
 
 # Building
 
+`counts` requires Rust 1.27 or later.
+
 Within the `counts` repository, run `cargo build --release`. This creates the
 executable `target/release/counts`. You can then put `target/release/` in your
 `PATH` variable, or copy/symlink the executable elsewhere.
