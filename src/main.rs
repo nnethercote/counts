@@ -1,8 +1,15 @@
-extern crate fnv;
+// Times on a 120MB file:
+// - HashMap: 2.6s
+// - FnvHashMap: 2.4s
+// - FxHashMap: 2.4s
+//
+// I am partial to FxHashMap, so I chose it over FnvHashMap.
+
+extern crate fxhash;
 extern crate regex;
 
+use fxhash::FxHashMap; // faster than `FnvHashMap` here, oddly enough
 use regex::Regex;
-use std::collections::HashMap; // faster than `FnvHashMap` here, oddly enough
 use std::env;
 use std::fs::File;
 use std::io::{self, BufRead, BufReader, Result};
@@ -31,7 +38,7 @@ fn main() -> Result<()> {
     }
 
     // Initialize.
-    let mut counts: HashMap<String, u64> = HashMap::default();
+    let mut counts: FxHashMap<String, u64> = FxHashMap::default();
     let mut total = 0u64;
 
     // Process inputs.
