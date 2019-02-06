@@ -113,7 +113,7 @@ might sometimes end up with output files that are gigabytes in size. But
 # Tips
 
 Use unbuffered output for the print statements. In C and C++ code, use
-`fprintf(stderr, ...)`. In Rust code use `eprintln!`.
+`fprintf(stderr, ...)`. In Rust code use `eprintln!` or `dbg!`.
 
 Pipe the stderr output to file, e.g. `firefox 2> log`.
 
