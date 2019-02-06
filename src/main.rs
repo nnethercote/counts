@@ -8,7 +8,7 @@
 extern crate fxhash;
 extern crate regex;
 
-use fxhash::FxHashMap; // faster than `FnvHashMap` here, oddly enough
+use fxhash::FxHashMap;
 use regex::Regex;
 use std::env;
 use std::fs::File;
