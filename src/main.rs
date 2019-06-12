@@ -82,7 +82,10 @@ fn main() -> io::Result<()> {
     match do_main() {
         Ok(_) => Ok(()),
         Err(ref err) if err.kind() == io::ErrorKind::BrokenPipe => Ok(()),
-        Err(err) => Err(err),
+        Err(err) => {
+            eprintln!("counts: {}", err);
+            std::process::exit(1);
+        }
     }
 }
 
