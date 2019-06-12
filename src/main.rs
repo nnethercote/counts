@@ -12,13 +12,13 @@ use fxhash::FxHashMap;
 use regex::Regex;
 use std::env;
 use std::fs::File;
-use std::io::{self, BufRead, BufReader, Result};
+use std::io::{self, BufRead, Write};
 use std::str::FromStr;
 
-fn main() -> Result<()> {
+fn do_main() -> io::Result<()> {
     // Process args.
     let mut weighted = false;
-    let mut readers: Vec<Box<dyn BufRead>> = vec![];
+    let mut readers: Vec<Box<dyn io::BufRead>> = vec![];
     for arg in env::args().skip(1) {
         if arg == "-w" {
             weighted = true;
@@ -27,14 +27,14 @@ fn main() -> Result<()> {
             return Ok(());
         } else {
             let file = File::open(arg)?;
-            let reader = Box::new(BufReader::new(file));
+            let reader = Box::new(io::BufReader::new(file));
             readers.push(reader);
         }
     }
 
     // Use stdin if no files were specified.
     if readers.is_empty() {
-        readers.push(Box::new(BufReader::new(io::stdin())))
+        readers.push(Box::new(io::BufReader::new(io::stdin())))
     }
 
     // Initialize.
@@ -65,14 +65,24 @@ fn main() -> Result<()> {
     counts.sort_unstable_by(|(_, n1), (_, n2)| n2.cmp(n1));
 
     // Print the histogram.
-    println!("{} counts:", total);
+    writeln!(io::stdout(), "{} counts:", total)?;
     let mut cum_perc: f64 = 0f64;
     for (i, (line, &weight)) in counts.iter().enumerate() {
         let perc: f64 = (weight as f64) * 100f64 / (total as f64);
         cum_perc += perc;
-        println!("({:3}) {:8} ({:4.1}%,{:5.1}%): {}",
-                 i + 1, weight, perc, cum_perc, line)
+        writeln!(io::stdout(), "({:3}) {:8} ({:4.1}%,{:5.1}%): {}",
+                 i + 1, weight, perc, cum_perc, line)?;
     }
 
     Ok(())
 }
+
+fn main() -> io::Result<()> {
+    // Ignore broken pipes, which occur for `counts input.txt | head -11`.
+    match do_main() {
+        Ok(_) => Ok(()),
+        Err(ref err) if err.kind() == io::ErrorKind::BrokenPipe => Ok(()),
+        Err(err) => Err(err),
+    }
+}
+
