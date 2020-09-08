@@ -5,7 +5,7 @@ of the Unix command chain `sort | uniq -c`.
 
 You can use it in combination with logging print statements in a program of
 interest to obtain invaluable, domain-specific profiling data. I call this
-technique "ad hoc profiling".
+technique ["ad hoc profiling"](https://blog.mozilla.org/nnethercote/2018/07/24/ad-hoc-profiling/).
 
 # Building
 
