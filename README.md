@@ -85,7 +85,7 @@ this file.
 ( 20) 45979 ( 0.9%, 73.1%): small 2048 (2048)
 ```
 Unsurprisingly, small allocations dominate. But what happens if we weight each
-entry by its size? counts -w produced the following output.
+entry by its size? `counts -w` produced the following output.
 ```
 2554515775 counts:
 ( 1) 501481472 (19.6%, 19.6%): large 32768 (32768)
@@ -112,7 +112,7 @@ entry by its size? counts -w produced the following output.
 This shows that the cumulative count of allocated bytes (2.55GB) is dominated
 by a mixture of larger allocation sizes.
 
-This example gives just a taste of what counts can do.
+This example gives just a taste of what `counts` can do.
 
 # Typical uses
 
@@ -174,7 +174,8 @@ might sometimes end up with output files that are gigabytes in size. But
 
 For a long time I have, in my own mind, used the term ad hoc profiling to
 describe this combination of logging print statements and frequency-based
-post-processing. Wikipedia defines “ad hoc” as follows.
+post-processing. Wikipedia [defines](https://en.wikipedia.org/wiki/Ad_hoc) "ad
+hoc" as follows.
 
 > In English, it generally signifies a solution designed for a specific problem
 > or task, non-generalizable, and not intended to be able to be adapted to
