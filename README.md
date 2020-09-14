@@ -7,15 +7,20 @@ chain `sort | uniq -c`.
 You can use it in combination with logging print statements in a program of
 interest to obtain invaluable, domain-specific profiling data.
 
-# Building
+# Installing
 
-`counts` requires Rust 1.27 or later.
+To install from [crates.io](https://crates.io/):
 
-Within the `counts` repository, run `cargo build --release`. This creates the
-executable `target/release/counts`. You can then put `target/release/` in your
-`PATH` variable, or copy/symlink the executable elsewhere.
+> `cargo install counts`
 
-# An example
+This requires Rust 1.27 or later. The compiled binary will be put into
+`~/.cargo/bin/`.
+
+To update the installation:
+
+> `cargo install --force counts`
+
+# A simple usage example
 
 Consider the following input.
 ```
@@ -54,7 +59,7 @@ such integer).  On the same input, `counts -w` produces the following output.
 The total and per-line counts are now weighted; the output incorporates both
 frequency and a measure of magnitude.
 
-# An example
+# A more complex usage example
 
 As an example, I added print statements to Firefox's heap allocator so it
 prints a line for every allocation that shows its category, requested size, and
