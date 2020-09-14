@@ -1,11 +1,11 @@
 # Overview
 
-`counts` tallies line frequencies within text files, like an improved version
-of the Unix command chain `sort | uniq -c`.
+`counts` is a command line tool for ad hoc profiling. It tallies line
+frequencies within text files, like an improved version of the Unix command
+chain `sort | uniq -c`.
 
 You can use it in combination with logging print statements in a program of
-interest to obtain invaluable, domain-specific profiling data. I call this
-technique "ad hoc profiling".
+interest to obtain invaluable, domain-specific profiling data.
 
 # Building
 
