@@ -1,6 +1,6 @@
 [package]
 name = "counts"
-version = "0.1.0"
+version = "0.1.1"
 authors = ["Nicholas Nethercote <n.nethercote@gmail.com>"]
 license = "Unlicense"
 description = "A command line tool for ad hoc profiling."
