@@ -22,7 +22,7 @@ fn do_main() -> io::Result<()> {
     for arg in env::args().skip(1) {
         if arg == "-w" {
             weighted = true;
-        } else if arg.starts_with("-") {
+        } else if arg.starts_with('-') {
             println!("usage: counts [-w] [infiles ...]");
             return Ok(());
         } else {
