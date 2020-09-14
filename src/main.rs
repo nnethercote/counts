@@ -70,8 +70,15 @@ fn do_main() -> io::Result<()> {
     for (i, (line, &weight)) in counts.iter().enumerate() {
         let perc: f64 = (weight as f64) * 100f64 / (total as f64);
         cum_perc += perc;
-        writeln!(io::stdout(), "({:3}) {:8} ({:4.1}%,{:5.1}%): {}",
-                 i + 1, weight, perc, cum_perc, line)?;
+        writeln!(
+            io::stdout(),
+            "({:3}) {:8} ({:4.1}%,{:5.1}%): {}",
+            i + 1,
+            weight,
+            perc,
+            cum_perc,
+            line
+        )?;
     }
 
     Ok(())
@@ -88,4 +95,3 @@ fn main() -> io::Result<()> {
         }
     }
 }
-
