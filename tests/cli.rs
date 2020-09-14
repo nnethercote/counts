@@ -9,9 +9,10 @@ fn file_doesnt_exist() -> Result<(), Box<dyn std::error::Error>> {
     let mut cmd = Command::cargo_bin("counts")?;
 
     cmd.arg("no/such/file");
-    cmd.assert()
-        .failure()
-        .stderr(predicate::str::contains("No such file or directory"));
+    cmd.assert().failure().stderr(
+        predicate::str::contains("No such file or directory") // Linux/Mac output
+            .or(predicate::str::contains("The system cannot find")), // Windows output
+    );
 
     Ok(())
 }
