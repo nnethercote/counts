@@ -19,3 +19,8 @@ fxhash = "0.2"
 assert_cmd = "0.10"
 predicates = "1.0"
 tempfile = "3.0"
+
+# These options make the binary a bit smaller.
+[profile.release]
+panic = "abort"
+lto = true
