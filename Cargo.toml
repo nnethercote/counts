@@ -9,7 +9,7 @@ homepage = "https://github.com/nnethercote/counts"
 repository = "https://github.com/nnethercote/counts"
 keywords = ["cli", "profiling"]
 categories = ["command-line-utilities", "development-tools::profiling"]
-edition = "2018"
+edition = "2021"
 
 [dependencies]
 regex = "1.0"

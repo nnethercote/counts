@@ -46,11 +46,12 @@ d 4
 It gives a total line count, and shows all the unique lines, ordered by
 frequency, with individual and cumulative percentages.
 
-Alternatively, when invoked with the `-w` flag, it assigns each line a weight,
-determined by the last integer that appears on the line (or 1 if there is no
-such integer).  On the same input, `counts -w` produces the following output.
+Alternatively, when invoked with the `-i` flag, it assigns each line an
+integral weight, determined by the last integer that appears on the line (or 1
+if there is no such integer).  On the same input, `counts -i` produces the
+following output.
 ```
-30 counts:
+30 counts (weighted integral)
 (  1)       16 (53.3%, 53.3%): d 4
 (  2)        9 (30.0%, 83.3%): c 3
 (  3)        4 (13.3%, 96.7%): b 2
@@ -58,6 +59,36 @@ such integer).  On the same input, `counts -w` produces the following output.
 ```
 The total and per-line counts are now weighted; the output incorporates both
 frequency and a measure of magnitude.
+
+The `-f` flag can be used for fractional weights, which can be integers or
+fractional numbers of the form `mm.nn`.
+
+Sometimes you want to group together lines that have different weights but are
+otherwise the same. The `-e` flag can be used to erase weights after applying
+them, by replacing them with `NNN`. Consider the following input.
+```
+a 1
+b 2
+a 3
+b 4
+a 5
+```
+`counts -i` will produce the following output, which is uninteresting.
+```
+15 counts (weighted integral)
+(  1)        5 (33.3%, 33.3%): a 5
+(  2)        4 (26.7%, 60.0%): b 4
+(  3)        3 (20.0%, 80.0%): a 3
+(  4)        2 (13.3%, 93.3%): b 2
+(  5)        1 ( 6.7%,100.0%): a 1
+```
+`counts -i -e` will produce the following output, where the different `a` and
+`b` lines have been grouped together.
+```
+15 counts (weighted integral, erased)
+(  1)        9 (60.0%, 60.0%): a NNN
+(  2)        6 (40.0%,100.0%): b NNN
+```
 
 # A more complex usage example
 
@@ -67,7 +98,7 @@ actual size. A short run of Firefox with this instrumentation produced a 77 MB
 file containing 5.27 million lines. `counts` produced the following output for
 this file.
 ```
-5270459 counts:
+5270459 counts
 ( 1) 576937 (10.9%, 10.9%): small 32 (32)
 ( 2) 546618 (10.4%, 21.3%): small 24 (32)
 ( 3) 492358 ( 9.3%, 30.7%): small 64 (64)
@@ -90,9 +121,9 @@ this file.
 ( 20) 45979 ( 0.9%, 73.1%): small 2048 (2048)
 ```
 Unsurprisingly, small allocations dominate. But what happens if we weight each
-entry by its size? `counts -w` produced the following output.
+entry by its size? `counts -i` produced the following output.
 ```
-2554515775 counts:
+2554515775 counts (weighted integral)
 ( 1) 501481472 (19.6%, 19.6%): large 32768 (32768)
 ( 2) 217878528 ( 8.5%, 28.2%): large 4096 (4096)
 ( 3) 156762112 ( 6.1%, 34.3%): large 65536 (65536)
@@ -203,7 +234,7 @@ Use unbuffered output for the print statements. In C and C++ code, use
 Pipe the stderr output to file, e.g. `firefox 2> log`.
 
 Sometimes programs print other lines of output to stderr that should be ignored
-by `counts`. (Especially if they include integer IDs that `counts -w` would
+by `counts`. (Especially if they include integer IDs that `counts -i` would
 interpret as weights!) Prepend all logging lines with a short identifier, and
 then use `grep $ID log | counts` to ignore the other lines. If you use more
 than one prefix, you can grep for each prefix individually or all together.
@@ -212,7 +243,7 @@ Occasionally output lines get munged together when multiple print statements
 are present. Because there are typically many lines of output, having a few
 garbage ones almost never matters.
 
-It's often useful to use both `counts` and `counts -w` on the same log file;
+It's often useful to use both `counts` and `counts -i` on the same log file;
 each one gives different insights into the data.
 
 To find which call sites of a function call are hot, you can instrument the
