@@ -175,7 +175,60 @@ def (0.1%)
     run_tests(input, tests)
 }
 
-fn run_tests(input: &str, tests: Vec<(Vec<&str>, &str)>) -> Result<(), Box<dyn std::error::Error>> {
+#[test]
+fn signed_integral() -> Result<(), Box<dyn std::error::Error>> {
+    let input = "\
+foo +3
+foo 4
+foo 5
+bar + -9
+bar + -10
+baz 23 - 2
+baz 23 - +1
+";
+
+    let tests = vec![(
+        vec!["-i", "-e"],
+        "\
+-4 counts (weighted integral, erased)
+(  1)      -19 (475.0%,475.0%): bar + NNN
+(  2)       12 (-300.0%,175.0%): foo NNN
+(  3)        3 (-75.0%,100.0%): baz 23 - NNN
+",
+    )];
+
+    run_tests(input, tests)
+}
+
+#[test]
+fn signed_fractional() -> Result<(), Box<dyn std::error::Error>> {
+    let input = "\
+foo +3.3
+foo 4.4
+foo 5.5
+bar + -6.6
+bar + -7.0
+baz 23 - 2
+baz 23 - +1
+";
+
+    let tests = vec![(
+        vec!["-f", "-e"],
+        "\
+2.6 counts (weighted fractional, erased)
+(  1)    -13.6 (-523.1%,-523.1%): bar + NNN
+(  2)     13.2 (507.7%,-15.4%): foo NNN
+(  3)      3.0 (115.4%,100.0%): baz 23 - NNN
+",
+    )];
+
+    run_tests(input, tests)
+}
+
+fn run_tests(
+    input: &'static str,
+    tests: Vec<(Vec<&'static str>, &'static str)>,
+) -> Result<(), Box<dyn std::error::Error>> {
     for (options, expected_output) in tests {
         let mut file = NamedTempFile::new()?;
         write!(file, "{}", input)?;

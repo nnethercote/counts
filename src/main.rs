@@ -79,29 +79,29 @@ fn do_main() -> io::Result<()> {
 
     let erased_label = if erase { ", erased" } else { "" };
     match weights {
-        Unit => process(readers, "", |line| (line, 1u64)),
+        Unit => process(readers, "", |line| (line, 1i64)),
         Integral => {
-            let re = Regex::new(r"(\d+)(\D*)$").unwrap();
+            let re = Regex::new(r"(([+-]?)\d+)(\D*)$").unwrap();
             process(
                 readers,
                 &format!(" (weighted integral{})", erased_label),
                 |line| {
                     if let Some(captures) = re.captures(&line) {
-                        let weight = u64::from_str(&captures[1]).unwrap();
+                        let weight = i64::from_str(&captures[1]).unwrap();
                         let line = if erase {
-                            re.replace(&line, "NNN${2}").to_string()
+                            re.replace(&line, "NNN${3}").to_string()
                         } else {
                             line
                         };
                         (line, weight)
                     } else {
-                        (line, 1u64)
+                        (line, 1i64)
                     }
                 },
             )
         }
         Fractional => {
-            let re = Regex::new(r"(\d+(\.\d+)?)(\D*)$").unwrap();
+            let re = Regex::new(r"(([+-]?)\d+(\.\d+)?)(\D*)$").unwrap();
             process(
                 readers,
                 &format!(" (weighted fractional{})", erased_label),
@@ -109,7 +109,7 @@ fn do_main() -> io::Result<()> {
                     if let Some(captures) = re.captures(&line) {
                         let weight = f64::from_str(&captures[1]).unwrap();
                         let line = if erase {
-                            re.replace(&line, "NNN${3}").to_string()
+                            re.replace(&line, "NNN${4}").to_string()
                         } else {
                             line
                         };
@@ -123,7 +123,7 @@ fn do_main() -> io::Result<()> {
     }
 }
 
-// `N` is either `u64` or `f64`, and `f64` values are always of the form
+// `N` is either `i64` or `f64`, and `f64` values are always of the form
 // `mm.nn` so NaNs can't occur and the `PartialOrd` is actually infallible.
 fn process<F, N>(
     readers: Vec<Box<dyn BufRead>>,
@@ -132,7 +132,7 @@ fn process<F, N>(
 ) -> io::Result<()>
 where
     F: Fn(String) -> (String, N),
-    N: AddAssign + Display + From<u32> + IntoF64 + PartialOrd,
+    N: Total,
 {
     let mut counts: FxHashMap<String, N> = FxHashMap::default();
     let mut total = N::from(0u32);
@@ -151,7 +151,7 @@ where
     // sort them in alphabetical order.
     let mut counts: Vec<_> = counts.iter().collect();
     counts.sort_unstable_by(|(line1, n1), (line2, n2)| {
-        (n2, line1).partial_cmp(&(n1, line2)).unwrap()
+        (n2.abs(), line1).partial_cmp(&(n1.abs(), line2)).unwrap()
     });
 
     writeln!(io::stdout(), "{:.1} counts{}", total, label)?;
@@ -174,25 +174,35 @@ where
     Ok(())
 }
 
-/// `f64` doesn't impl `From<u64>` or `TryFrom<u64>`, so we do it ourselves. We
-/// are unlikely to see `u64` values that are so big that they cannot be
-/// represented as `f64`s, so we make this infallible.
-pub trait IntoF64: Copy {
+pub trait Total: AddAssign + Copy + Display + From<u32> + PartialOrd {
+    /// `f64` doesn't impl `From<i64>` or `TryFrom<i64>`, so we do it
+    /// ourselves. We are unlikely to see `i64` values that are so big that
+    /// they cannot be represented as `f64`s, so we make this infallible.
     fn into_f64(self) -> f64;
+
+    fn abs(self) -> Self;
 }
 
-impl IntoF64 for f64 {
+impl Total for f64 {
     fn into_f64(self) -> f64 {
         self
     }
+
+    fn abs(self) -> f64 {
+        self.abs()
+    }
 }
 
-impl IntoF64 for u64 {
+impl Total for i64 {
     fn into_f64(self) -> f64 {
         let f = self as f64;
-        if f as u64 != self {
-            panic!("u64 too big to convert to f64")
+        if f as i64 != self {
+            panic!("i64 too big to convert to f64")
         }
         f
+    }
+
+    fn abs(self) -> i64 {
+        self.abs()
     }
 }

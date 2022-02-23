@@ -63,6 +63,10 @@ frequency and a measure of magnitude.
 The `-f` flag can be used for fractional weights, which can be integers or
 fractional numbers of the form `mm.nn`.
 
+Negative weights are allowed. In the output, each entry is sorted by the
+absolute value of its aggregate weight. This means that both large positive and
+large negative entries will show up near the top.
+
 Sometimes you want to group together lines that have different weights but are
 otherwise the same. The `-e` flag can be used to erase weights after applying
 them, by replacing them with `NNN`. Consider the following input.
