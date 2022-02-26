@@ -240,7 +240,7 @@ Pipe the stderr output to file, e.g. `firefox 2> log`.
 If you are generating large amounts of data, piping your data through a fast 
 compressor could be convenient. `zstd` can process gigabytes per second, 
 while saving more than 90% on disk usage. Use `firefox 2>&1 >/dev/null | zstd 
---fast log.zst` to write and `zstd -d -c log.zst | counts` to process.
+--fast -o log.zst` to write and `zstd -d -c log.zst | counts` to process.
 
 Sometimes programs print other lines of output to stderr that should be ignored
 by `counts`. (Especially if they include integer IDs that `counts -i` would
