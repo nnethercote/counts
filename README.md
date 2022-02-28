@@ -235,12 +235,11 @@ don’t have quite the same ring to them.
 Use unbuffered output for the print statements. In C and C++ code, use
 `fprintf(stderr, ...)`. In Rust code use `eprintln!` or `dbg!`.
 
-Pipe the stderr output to file, e.g. `firefox 2> log`.
+Pipe the stderr output to file, e.g. `my-prog 2> log`.
 
-If you are generating large amounts of data, piping your data through a fast 
-compressor could be convenient. `zstd` can process gigabytes per second, 
-while saving more than 90% on disk usage. Use `firefox 2>&1 >/dev/null | zstd 
---fast -o log.zst` to write and `zstdcat log.zst | counts` to process.
+If the log files get large, piping the data through a fast compressor such as
+`zstd` may be worthwhile. For example, `my-prog 2>&1 >/dev/null | zstd 
+-f -o log.zst` to write and `zstdcat log.zst | counts` to process.
 
 Sometimes programs print other lines of output to stderr that should be ignored
 by `counts`. (Especially if they include integer IDs that `counts -i` would
