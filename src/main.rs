@@ -42,10 +42,13 @@ USAGE:
 
 OPTIONS:
     -h, --help     Print help information
+    --version      Print version information
     -i, -w         Integral weighting of lines
     -f             Fractional weighting of lines
     -e             Erase weights after applying, replacing them with `NNN`
 ";
+
+const VERSION: &'static str = "0.2.0";
 
 fn do_main() -> io::Result<()> {
     // Process args.
@@ -56,6 +59,9 @@ fn do_main() -> io::Result<()> {
         if arg == "-h" || arg == "--help" {
             println!("{}", USAGE);
             return Ok(());
+        } else if arg == "--version" {
+            println!("counts-{VERSION}");
+            std::process::exit(1);
         } else if arg == "-i" || arg == "-w" {
             weights = Integral;
         } else if arg == "-f" {
