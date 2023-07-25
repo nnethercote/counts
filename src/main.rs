@@ -48,7 +48,7 @@ OPTIONS:
     -e             Erase weights after applying, replacing them with `NNN`
 ";
 
-const VERSION: &'static str = "0.2.0";
+const VERSION: &str = "0.2.0";
 
 fn do_main() -> io::Result<()> {
     // Process args.
