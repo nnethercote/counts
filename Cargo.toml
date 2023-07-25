@@ -12,7 +12,7 @@ categories = ["command-line-utilities", "development-tools::profiling"]
 edition = "2021"
 
 [dependencies]
-regex = "1.0"
+regex-lite = "0.1"
 fxhash = "0.2"
 
 [dev-dependencies]
