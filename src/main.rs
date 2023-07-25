@@ -6,7 +6,7 @@
 // I am partial to FxHashMap, so I chose it over FnvHashMap.
 
 use fxhash::FxHashMap;
-use regex_lite::Regex;
+use regex::Regex;
 use std::env;
 use std::fmt::Display;
 use std::fs::File;
