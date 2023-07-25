@@ -174,7 +174,7 @@ where
     Ok(())
 }
 
-pub trait Total: AddAssign + Copy + Display + From<u32> + PartialOrd {
+trait Total: AddAssign + Copy + Display + From<u32> + PartialOrd {
     /// `f64` doesn't impl `From<i64>` or `TryFrom<i64>`, so we do it
     /// ourselves. We are unlikely to see `i64` values that are so big that
     /// they cannot be represented as `f64`s, so we make this infallible.
