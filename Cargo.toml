@@ -16,7 +16,7 @@ regex-lite = "0.1"
 fxhash = "0.2"
 
 [dev-dependencies]
-assert_cmd = "0.10"
+assert_cmd = "2.0"
 predicates = "1.0"
 tempfile = "3.0"
 
