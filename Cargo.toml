@@ -17,7 +17,7 @@ fxhash = "0.2"
 
 [dev-dependencies]
 assert_cmd = "2.0"
-predicates = "1.0"
+predicates = "3.0"
 tempfile = "3.0"
 
 # These options make the binary a bit smaller.
