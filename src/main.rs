@@ -146,7 +146,7 @@ where
     for reader in readers {
         for line in reader.lines() {
             let Ok(line) = line else {
-                eprintln!("error: non-UTF-8 input detected");
+                eprintln!("counts: non-UTF-8 input detected, aborting");
                 std::process::exit(1);
             };
             let (line, weight) = get_line_and_weight(line);

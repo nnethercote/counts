@@ -228,7 +228,7 @@ baz 23 - +1
 #[test]
 fn non_utf8() -> Result<(), Box<dyn std::error::Error>> {
     let input = unsafe { std::str::from_utf8_unchecked(&[0x97, 0x98, 0x99, 0xff]) };
-    let expected_output = "error: non-UTF-8 input detected\n";
+    let expected_output = "counts: non-UTF-8 input detected, aborting\n";
 
     bad_test(input, expected_output)
 }
