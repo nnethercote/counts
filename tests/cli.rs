@@ -36,7 +36,7 @@ fn empty() -> Result<(), Box<dyn std::error::Error>> {
         (vec!["-i", "-f"], "0.0 counts (weighted fractional)\n"),
     ];
 
-    run_tests(input, tests)
+    good_tests(input, tests)
 }
 
 #[test]
@@ -108,7 +108,7 @@ d 4
         ),
     ];
 
-    run_tests(input, tests)
+    good_tests(input, tests)
 }
 
 #[test]
@@ -172,7 +172,7 @@ def (0.1%)
         ),
     ];
 
-    run_tests(input, tests)
+    good_tests(input, tests)
 }
 
 #[test]
@@ -197,7 +197,7 @@ baz 23 - +1
 ",
     )];
 
-    run_tests(input, tests)
+    good_tests(input, tests)
 }
 
 #[test]
@@ -222,10 +222,18 @@ baz 23 - +1
 ",
     )];
 
-    run_tests(input, tests)
+    good_tests(input, tests)
 }
 
-fn run_tests(
+#[test]
+fn non_utf8() -> Result<(), Box<dyn std::error::Error>> {
+    let input = unsafe { std::str::from_utf8_unchecked(&[0x97, 0x98, 0x99, 0xff]) };
+    let expected_output = "error: non-UTF-8 input detected\n";
+
+    bad_test(input, expected_output)
+}
+
+fn good_tests(
     input: &'static str,
     tests: Vec<(Vec<&'static str>, &'static str)>,
 ) -> Result<(), Box<dyn std::error::Error>> {
@@ -242,5 +250,20 @@ fn run_tests(
             .success()
             .stdout(predicate::eq(expected_output));
     }
+    Ok(())
+}
+
+fn bad_test(
+    input: &'static str,
+    expected_output: &'static str,
+) -> Result<(), Box<dyn std::error::Error>> {
+    let mut file = NamedTempFile::new()?;
+    write!(file, "{}", input)?;
+
+    let mut cmd = Command::cargo_bin("counts")?;
+    cmd.arg(file.path());
+    cmd.assert()
+        .failure()
+        .stderr(predicate::eq(expected_output));
     Ok(())
 }

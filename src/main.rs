@@ -145,7 +145,10 @@ where
 
     for reader in readers {
         for line in reader.lines() {
-            let line = line.unwrap();
+            let Ok(line) = line else {
+                eprintln!("error: non-UTF-8 input detected");
+                std::process::exit(1);
+            };
             let (line, weight) = get_line_and_weight(line);
             let entry = counts.entry(line).or_insert_with(|| N::from(0u32));
             *entry += weight;
