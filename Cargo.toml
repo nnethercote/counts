@@ -1,6 +1,6 @@
 [package]
 name = "counts"
-version = "1.0.2" # Keep in sync with `VERSION` in main.rs.
+version = "1.0.3" # Keep in sync with `VERSION` in main.rs.
 authors = ["Nicholas Nethercote <n.nethercote@gmail.com>"]
 license = "Unlicense"
 description = "A command line tool for ad hoc profiling."
