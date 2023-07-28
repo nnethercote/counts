@@ -10,6 +10,7 @@ repository = "https://github.com/nnethercote/counts"
 keywords = ["cli", "profiling"]
 categories = ["command-line-utilities", "development-tools::profiling"]
 edition = "2021"
+rust-version = "1.59"
 
 [dependencies]
 regex-lite = "0.1"
@@ -21,6 +22,17 @@ predicates = "3.0"
 tempfile = "3.0"
 
 # These options make the binary a bit smaller.
+# Data from v1.0.3, 2023-07-28:
+# --------------------------------------
+# config                 Linux    Mac
+# --------------------------------------
+# base                   4632976  773728    
+#  + lto = true          2340584  676192
+#  + panic = abort       2313104  639032
+#  + strip = "debuginfo"  486936  536496 
+# -> strip = true         486968  464816
+# --------------------------------------
 [profile.release]
-panic = "abort"
 lto = true
+panic = "abort"
+strip = true
