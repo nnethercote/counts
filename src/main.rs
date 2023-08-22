@@ -158,7 +158,7 @@ where
 
     // Sort from highest count to lowest count. For lines with the same count,
     // sort them in alphabetical order.
-    let mut counts: Vec<_> = counts.iter().collect();
+    let mut counts: Vec<_> = counts.into_iter().collect();
     counts.sort_unstable_by(|(line1, n1), (line2, n2)| {
         (n2.abs(), line1).partial_cmp(&(n1.abs(), line2)).unwrap()
     });
@@ -166,7 +166,7 @@ where
     writeln!(io::stdout(), "{:.1} counts{}", total, label)?;
     let mut cum_perc: f64 = 0f64;
     let total_f64 = total.into_f64();
-    for (i, (line, &weight)) in counts.iter().enumerate() {
+    for (i, (line, weight)) in counts.iter().enumerate() {
         let perc: f64 = weight.into_f64() * 100f64 / total_f64;
         cum_perc += perc;
         writeln!(
