@@ -85,23 +85,23 @@ fn do_main() -> io::Result<()> {
 
     let erased_label = if erase { ", erased" } else { "" };
     match weights {
-        Unit => process(readers, "", |line| (line, 1i64)),
+        Unit => process(readers, "", |_line| (None, 1i64)),
         Integral => {
             let re = Regex::new(r"(([+-]?)\d+)(\D*)$").unwrap();
             process(
                 readers,
                 &format!(" (weighted integral{})", erased_label),
                 |line| {
-                    if let Some(captures) = re.captures(&line) {
+                    if let Some(captures) = re.captures(line) {
                         let weight = i64::from_str(&captures[1]).unwrap();
-                        let line = if erase {
-                            re.replace(&line, "NNN${3}").to_string()
+                        if erase {
+                            let line = re.replace(line, "NNN${3}").to_string();
+                            (Some(line), weight)
                         } else {
-                            line
-                        };
-                        (line, weight)
+                            (None, weight)
+                        }
                     } else {
-                        (line, 1i64)
+                        (None, 1i64)
                     }
                 },
             )
@@ -112,16 +112,16 @@ fn do_main() -> io::Result<()> {
                 readers,
                 &format!(" (weighted fractional{})", erased_label),
                 |line| {
-                    if let Some(captures) = re.captures(&line) {
+                    if let Some(captures) = re.captures(line) {
                         let weight = f64::from_str(&captures[1]).unwrap();
-                        let line = if erase {
-                            re.replace(&line, "NNN${4}").to_string()
+                        if erase {
+                            let line = re.replace(line, "NNN${4}").to_string();
+                            (Some(line), weight)
                         } else {
-                            line
-                        };
-                        (line, weight)
+                            (None, weight)
+                        }
                     } else {
-                        (line, 1f64)
+                        (None, 1f64)
                     }
                 },
             )
@@ -137,22 +137,54 @@ fn process<F, N>(
     get_line_and_weight: F,
 ) -> io::Result<()>
 where
-    F: Fn(String) -> (String, N),
+    F: Fn(&str) -> (Option<String>, N),
     N: Total,
 {
-    let mut counts: FxHashMap<String, N> = FxHashMap::default();
     let mut total = N::from(0u32);
+    let mut counts: FxHashMap<String, N> = FxHashMap::default();
 
-    for reader in readers {
-        for line in reader.lines() {
-            let Ok(line) = line else {
-                eprintln!("counts: non-UTF-8 input detected, aborting");
-                std::process::exit(1);
-            };
-            let (line, weight) = get_line_and_weight(line);
-            let entry = counts.entry(line).or_insert_with(|| N::from(0u32));
-            *entry += weight;
+    // `reader.lines()` is the obvious way to do this loop, but that requires
+    // allocating every line into a `String`. Instead we use
+    // `reader.read_line()` and use a single string for every iteration. On the
+    // first occurrence of a line we need to do a `to_string` to insert it into
+    // the table. On subsequent occurrences we don't. Most `counts` input tends
+    // to have significant numbers of repeated lines, so this approach reduces
+    // allocation counts greatly.
+    let mut line_with_nl = String::new();
+    for mut reader in readers {
+        loop {
+            match reader.read_line(&mut line_with_nl) {
+                Ok(0) => break,
+                Ok(_) => {}
+                Err(err) => {
+                    eprintln!("counts: {}", err);
+                    std::process::exit(1);
+                }
+            }
+
+            let line = &line_with_nl[..line_with_nl.len() - 1];
+            let (modified_line, weight) = get_line_and_weight(line);
+            match modified_line {
+                None => {
+                    // The line has not been modified. Only promote to `String`
+                    // if it hasn't been seen before.
+                    if let Some(entry) = counts.get_mut(line) {
+                        *entry += weight;
+                    } else {
+                        counts.insert(line.to_string(), weight);
+                    }
+                }
+                Some(modified_line) => {
+                    // The line has been modified, which means it has already
+                    // been promoted to a `String`.
+                    let entry = counts.entry(modified_line).or_insert_with(|| N::from(0u32));
+                    *entry += weight;
+                }
+            }
             total += weight;
+
+            // We are finished with the contents of this line.
+            line_with_nl.clear();
         }
     }
 
