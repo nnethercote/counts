@@ -227,7 +227,7 @@ baz 23 - +1
 
 #[test]
 fn non_utf8() -> Result<(), Box<dyn std::error::Error>> {
-    let input = unsafe { std::str::from_utf8_unchecked(&[0x97, 0x98, 0x99, 0xff]) };
+    let input = &[0x97, 0x98, 0x99, 0xff];
     let expected_output = "counts: stream did not contain valid UTF-8\n";
 
     bad_test(input, expected_output)
@@ -254,11 +254,11 @@ fn good_tests(
 }
 
 fn bad_test(
-    input: &'static str,
+    input: &'static [u8],
     expected_output: &'static str,
 ) -> Result<(), Box<dyn std::error::Error>> {
     let mut file = NamedTempFile::new()?;
-    write!(file, "{}", input)?;
+    file.write_all(input)?;
 
     let mut cmd = Command::cargo_bin("counts")?;
     cmd.arg(file.path());
