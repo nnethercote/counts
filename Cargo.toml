@@ -30,9 +30,9 @@ tempfile = "3.0"
 #  + lto = true          2340584  676192
 #  + panic = abort       2313104  639032
 #  + strip = "debuginfo"  486936  536496 
-# -> strip = true         486968  464816
+# -> strip = "symbols"    486968  464816
 # --------------------------------------
 [profile.release]
 lto = true
 panic = "abort"
-strip = true
+strip = "symbols"
