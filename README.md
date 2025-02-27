@@ -254,12 +254,18 @@ garbage ones almost never matters.
 It's often useful to use both `counts` and `counts -i` on the same log file;
 each one gives different insights into the data.
 
-To find which call sites of a function call are hot, you can instrument the
-call sites directly. But it's easy to miss one, and the same print statements
-need to be repeated multiple times. An alternative is to add an extra string or
+To find which call sites of a function are hot, you can instrument the call
+sites directly. But it's easy to miss one, and the same print statements need
+to be repeated multiple times. An alternative is to add an extra string or
 integer argument to the function, pass in a unique value from each call site,
-and then print that value within the function.
+and then print that value within the function. This works but is tedious if
+there are many call sites. In Rust, you can instead put this inside the hot
+function:
+```rust
+eprintln!("{}", std::panic::Location::caller());
+```
+and then add `#[track_caller]` to the function (and possibly functions that
+call it) and you'll get exactly what you want.
 
 It's occasionally useful to look at the raw logs as well as the output of
 `counts`, because the sequence of output lines can be informative.
-
