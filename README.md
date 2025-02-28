@@ -269,3 +269,4 @@ call it) and you'll get exactly what you want.
 
 It's occasionally useful to look at the raw logs as well as the output of
 `counts`, because the sequence of output lines can be informative.
+
