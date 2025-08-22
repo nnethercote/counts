@@ -5,7 +5,6 @@ authors = ["Nicholas Nethercote <n.nethercote@gmail.com>"]
 license = "Unlicense"
 description = "A command line tool for ad hoc profiling."
 readme = "README.md"
-homepage = "https://github.com/nnethercote/counts"
 repository = "https://github.com/nnethercote/counts"
 keywords = ["cli", "profiling"]
 categories = ["command-line-utilities", "development-tools::profiling"]
