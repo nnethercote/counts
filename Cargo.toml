@@ -8,8 +8,8 @@ readme = "README.md"
 repository = "https://github.com/nnethercote/counts"
 keywords = ["cli", "profiling"]
 categories = ["command-line-utilities", "development-tools::profiling"]
-edition = "2021"
-rust-version = "1.59"
+edition = "2024"
+rust-version = "1.85"
 
 [dependencies]
 regex-lite = "0.1"
