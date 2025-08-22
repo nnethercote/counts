@@ -13,8 +13,7 @@ To install from [crates.io](https://crates.io/):
 
 > `cargo install counts`
 
-This requires Rust 1.59 or later. The compiled binary will be put into
-`~/.cargo/bin/`.
+The compiled binary will be put into `~/.cargo/bin/`.
 
 To update the installation:
 
