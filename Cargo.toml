@@ -17,8 +17,10 @@ fxhash = "0.2"
 
 [dev-dependencies]
 assert_cmd = "2.0"
-predicates = "3.0"
-tempfile = "3.0"
+# Disable various features, none of which we need, apparently.
+predicates = { version = "3.0", default-features = false }
+# Disable `getrandom` feature. File creation DoS attacks are not a risk for this crate's tests.
+tempfile = { version = "3.0", default-features = false }
 
 # These options make the binary a bit smaller.
 # Data from v1.0.3, 2023-07-28:
