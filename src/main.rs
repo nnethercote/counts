@@ -48,7 +48,7 @@ OPTIONS:
     -e             Erase weights after applying, replacing them with `NNN`
 ";
 
-const VERSION: &str = "1.0.6";
+const VERSION: &str = env!("CARGO_PKG_VERSION");
 
 fn do_main() -> io::Result<()> {
     // Process args.
