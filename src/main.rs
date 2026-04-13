@@ -61,7 +61,7 @@ fn do_main() -> io::Result<()> {
             return Ok(());
         } else if arg == "--version" {
             println!("counts-{VERSION}");
-            std::process::exit(1);
+            return Ok(());
         } else if arg == "-i" || arg == "-w" {
             weights = Integral;
         } else if arg == "-f" {
