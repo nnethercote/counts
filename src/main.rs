@@ -93,7 +93,16 @@ fn do_main() -> io::Result<()> {
                 &format!(" (weighted integral{})", erased_label),
                 |line| {
                     if let Some(captures) = re.captures(line) {
-                        let weight = i64::from_str(&captures[1]).unwrap();
+                        let weight = match i64::from_str(&captures[1]) {
+                            Ok(weight) => weight,
+                            Err(_) => {
+                                eprintln!(
+                                    "counts: integral weight of `{}` exceeds 64 bits",
+                                    &captures[1]
+                                );
+                                std::process::exit(1);
+                            }
+                        };
                         if erase {
                             let line = re.replace(line, "NNN${3}").to_string();
                             (Some(line), weight)
@@ -113,6 +122,8 @@ fn do_main() -> io::Result<()> {
                 &format!(" (weighted fractional{})", erased_label),
                 |line| {
                     if let Some(captures) = re.captures(line) {
+                        // `unwrap` should be safe here; it should be impossible for the `from_str`
+                        // to fail given the regex.
                         let weight = f64::from_str(&captures[1]).unwrap();
                         if erase {
                             let line = re.replace(line, "NNN${4}").to_string();

@@ -270,11 +270,23 @@ ccc -1
 }
 
 #[test]
+fn too_big_weight() -> Result<(), Box<dyn std::error::Error>> {
+    let input = "\
+aaa 1
+bbb 2
+ccc 28446744073709551616
+";
+    let expected_output = "counts: integral weight of `28446744073709551616` exceeds 64 bits\n";
+
+    bad_test(input.as_bytes(), vec!["-i"], expected_output)
+}
+
+#[test]
 fn non_utf8() -> Result<(), Box<dyn std::error::Error>> {
     let input = &[0x97, 0x98, 0x99, 0xff];
     let expected_output = "counts: stream did not contain valid UTF-8\n";
 
-    bad_test(input, expected_output)
+    bad_test(input, vec![], expected_output)
 }
 
 fn good_tests(
@@ -299,6 +311,7 @@ fn good_tests(
 
 fn bad_test(
     input: &'static [u8],
+    options: Vec<&'static str>,
     expected_output: &'static str,
 ) -> Result<(), Box<dyn std::error::Error>> {
     let mut file = NamedTempFile::new()?;
@@ -306,6 +319,9 @@ fn bad_test(
 
     let mut cmd = Command::cargo_bin("counts")?;
     cmd.arg(file.path());
+    for option in options {
+        cmd.arg(option);
+    }
     cmd.assert()
         .failure()
         .stderr(predicate::eq(expected_output));
