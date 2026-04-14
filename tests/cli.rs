@@ -293,10 +293,10 @@ fn good_tests(
     input: &str,
     tests: Vec<(Vec<&str>, &str)>,
 ) -> Result<(), Box<dyn std::error::Error>> {
-    for (options, expected_output) in tests {
-        let mut file = NamedTempFile::new()?;
-        write!(file, "{}", input)?;
+    let mut file = NamedTempFile::new()?;
+    write!(file, "{}", input)?;
 
+    for (options, expected_output) in tests {
         let mut cmd = Command::cargo_bin("counts")?;
         for option in options {
             cmd.arg(option);
