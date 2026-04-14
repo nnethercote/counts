@@ -153,13 +153,9 @@ where
     let mut line_with_nl = String::new();
     for mut reader in readers {
         loop {
-            match reader.read_line(&mut line_with_nl) {
-                Ok(0) => break,
-                Ok(_) => {}
-                Err(err) => {
-                    eprintln!("counts: {}", err);
-                    std::process::exit(1);
-                }
+            match reader.read_line(&mut line_with_nl)? {
+                0 => break,
+                _ => {}
             }
 
             let line = line_with_nl.trim_end_matches('\n');
