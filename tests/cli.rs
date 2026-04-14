@@ -298,10 +298,10 @@ fn good_tests(
         write!(file, "{}", input)?;
 
         let mut cmd = Command::cargo_bin("counts")?;
-        cmd.arg(file.path());
         for option in options {
             cmd.arg(option);
         }
+        cmd.arg(file.path());
         cmd.assert()
             .success()
             .stdout(predicate::eq(expected_output));
@@ -318,10 +318,10 @@ fn bad_test(
     file.write_all(input)?;
 
     let mut cmd = Command::cargo_bin("counts")?;
-    cmd.arg(file.path());
     for option in options {
         cmd.arg(option);
     }
+    cmd.arg(file.path());
     cmd.assert()
         .failure()
         .stderr(predicate::eq(expected_output));
