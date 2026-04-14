@@ -226,6 +226,29 @@ baz 23 - +1
 }
 
 #[test]
+fn missing_final_nl() -> Result<(), Box<dyn std::error::Error>> {
+    let input = "\
+foo
+foo
+bar
+bar
+bar
+baz";
+
+    let tests = vec![(
+        vec![],
+        "\
+6 counts
+(  1)        3 (50.0%, 50.0%): bar
+(  2)        2 (33.3%, 83.3%): foo
+(  3)        1 (16.7%,100.0%): baz
+",
+    )];
+
+    good_tests(input, tests)
+}
+
+#[test]
 fn non_utf8() -> Result<(), Box<dyn std::error::Error>> {
     let input = &[0x97, 0x98, 0x99, 0xff];
     let expected_output = "counts: stream did not contain valid UTF-8\n";

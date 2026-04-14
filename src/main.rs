@@ -162,7 +162,7 @@ where
                 }
             }
 
-            let line = &line_with_nl[..line_with_nl.len() - 1];
+            let line = line_with_nl.trim_end_matches('\n');
             let (modified_line, weight) = get_line_and_weight(line);
             match modified_line {
                 None => {
