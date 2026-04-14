@@ -249,6 +249,27 @@ baz";
 }
 
 #[test]
+fn div_by_zero() -> Result<(), Box<dyn std::error::Error>> {
+    let input = "\
+aaa 0
+bbb 1
+ccc -1
+";
+
+    let tests = vec![(
+        vec!["-i"],
+        "\
+0 counts (weighted integral)
+(  1)        1 ( inf%,  inf%): bbb 1
+(  2)       -1 (-inf%,  NaN%): ccc -1
+(  3)        0 ( NaN%,  NaN%): aaa 0
+",
+    )];
+
+    good_tests(input, tests)
+}
+
+#[test]
 fn non_utf8() -> Result<(), Box<dyn std::error::Error>> {
     let input = &[0x97, 0x98, 0x99, 0xff];
     let expected_output = "counts: stream did not contain valid UTF-8\n";
