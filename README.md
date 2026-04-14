@@ -9,15 +9,13 @@ interest to obtain invaluable, domain-specific profiling data.
 
 # Installing
 
-To install from [crates.io](https://crates.io/):
+The MSRV is 1.85.
+
+To install or update from [crates.io](https://crates.io/):
 
 > `cargo install counts`
 
 The compiled binary will be put into `~/.cargo/bin/`.
-
-To update the installation:
-
-> `cargo install --force counts`
 
 # A simple usage example
 
@@ -36,7 +34,7 @@ d 4
 ```
 `counts` produces the following output.
 ```
-10 counts:
+10 counts
 (  1)        4 (40.0%, 40.0%): d 4
 (  2)        3 (30.0%, 70.0%): c 3
 (  3)        2 (20.0%, 90.0%): b 2
@@ -237,7 +235,7 @@ Use unbuffered output for the print statements. In C and C++ code, use
 Pipe the stderr output to file, e.g. `my-prog 2> log`.
 
 If the log files get large, piping the data through a fast compressor such as
-`zstd` may be worthwhile. For example, `my-prog 2>&1 >/dev/null | zstd 
+`zstd` may be worthwhile. For example, `my-prog 2>&1 >/dev/null | zstd
 -f -o log.zst` to write and `zstdcat log.zst | counts` to process.
 
 Sometimes programs print other lines of output to stderr that should be ignored

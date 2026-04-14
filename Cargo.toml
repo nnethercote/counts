@@ -9,7 +9,7 @@ repository = "https://github.com/nnethercote/counts"
 keywords = ["cli", "profiling"]
 categories = ["command-line-utilities", "development-tools::profiling"]
 edition = "2024"
-rust-version = "1.85"
+rust-version = "1.85" # Update README.md if this changes
 
 [dependencies]
 regex-lite = "0.1"
