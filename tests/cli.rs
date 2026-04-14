@@ -290,8 +290,8 @@ fn non_utf8() -> Result<(), Box<dyn std::error::Error>> {
 }
 
 fn good_tests(
-    input: &'static str,
-    tests: Vec<(Vec<&'static str>, &'static str)>,
+    input: &str,
+    tests: Vec<(Vec<&str>, &str)>,
 ) -> Result<(), Box<dyn std::error::Error>> {
     for (options, expected_output) in tests {
         let mut file = NamedTempFile::new()?;
@@ -310,9 +310,9 @@ fn good_tests(
 }
 
 fn bad_test(
-    input: &'static [u8],
-    options: Vec<&'static str>,
-    expected_output: &'static str,
+    input: &[u8],
+    options: Vec<&str>,
+    expected_output: &str,
 ) -> Result<(), Box<dyn std::error::Error>> {
     let mut file = NamedTempFile::new()?;
     file.write_all(input)?;
