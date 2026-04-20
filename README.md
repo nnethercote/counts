@@ -9,7 +9,7 @@ interest to obtain invaluable, domain-specific profiling data.
 
 # Installing
 
-The MSRV is 1.85.
+The minimum supported Rust version (MSRV) is 1.85.
 
 To install or update from [crates.io](https://crates.io/):
 
@@ -153,8 +153,8 @@ This example gives just a taste of what `counts` can do.
 
 # Typical uses
 
-This technique is often useful when you already know something -- e.g. a
-general-purpose profiler showed that a particular function is hot -- but you
+`counts` is often useful when you already know something — e.g. a
+general-purpose profiler showed that a particular function is hot — but you
 want to know more.
 
 - Exactly how many times are paths X, Y and Z executed? For example, how often
@@ -207,7 +207,7 @@ might sometimes end up with output files that are gigabytes in size. But
 `counts` is fast because it's so simple. Let the machine do the work for you.
 (It does help if you have a machine with an SSD.)
 
-# Ad Hoc Profiling
+# Ad hoc profiling
 
 For a long time I have, in my own mind, used the term ad hoc profiling to
 describe this combination of logging print statements and frequency-based
@@ -225,7 +225,7 @@ of "ad hoc".
 But `counts` is valuable specifically because it makes this type of custom
 profiling less ad hoc and more repeatable. I should arguably call it
 "generalized ad hoc profiling" or "not so ad hoc profiling", but those names
-don’t have quite the same ring to them.
+don't have quite the same ring to them.
 
 # Tips
 
